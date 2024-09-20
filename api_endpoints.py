@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+import uuid
 
 
 # Create a supabase account and get the url and key
@@ -24,7 +25,22 @@ class Fetch:
 
         res = requests.get(url,headers=params)
 
-        print(res.json())
+        Fetch.tasks = res.json()
+    
+class Commit:
+    
+    data: dict[str, str] = {}
+
+    def commit_task_to_table(data: dict[str, str]):
+        url: str = "https://jpwxxlrwtwbhmjtqzovc.supabase.co/rest/v1/flet_tasks"
+        params: dict[str, str] = {
+            'apikey': KEY,
+            'Authorization': f"Bearer {KEY}",
+            'Content-Type': "application/json"
+        }
+
+        requests.post(url, headers=params, json=data)
+
 
 
 
@@ -34,5 +50,4 @@ def main(page: ft.Page):
     page.update()
 
 if __name__ == '__main__':
-    Fetch.fetch_all_tasks()
     ft.app(main)
